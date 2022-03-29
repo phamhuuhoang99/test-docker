@@ -1,0 +1,30 @@
+version: '3.8'
+services:
+  db:
+    container_name: db
+    image: "postgres:12"
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=HuuHoang123
+      - POSTGRES_DB=testDocker
+    volumes:
+      - nps_data:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/testDocker.sql
+  node-app:
+    image: node-app:latest
+    build:
+      context: .
+    ports:
+      - "3000:3000"
+    environment:
+      - PORT=3000
+      - DB_NAME=testDocker
+      - DB_USER=postgres
+      - DB_PASS=HuuHoang123
+      - DB_HOST=db
+    depends_on:
+      - db
+volumes:
+  nps_data: {}
